@@ -63,6 +63,21 @@ def decrypt_with_partial_key(encrypted, partial_key):
     return result
 
 
+def analyze_frequency(text):
+    """Count how often each letter appears in the text"""
+    from collections import Counter
+
+    # Get only letters, make them uppercase
+    letters = [c for c in text.upper() if c.isalpha()]
+
+    # Count how many times each letter appears
+    freq = Counter(letters)
+
+    # Return them sorted by most common first
+    # Returns a list like: [('E', 5), ('T', 3), ('A', 2), ...]
+    return freq.most_common()
+
+
 # Test it
 if __name__ == "__main__":
     # Generate key and encrypt
@@ -80,6 +95,12 @@ if __name__ == "__main__":
     print(f"Decrypted: {decrypted}")
     print()
 
+    # NEW: Test frequency analysis
+    print("Frequency Analysis:")
+    frequencies = analyze_frequency(encrypted)
+    for letter, count in frequencies:
+        print(f"  {letter}: {count} times")
+        
     # Partial decryption (simulating player guesses)
     # Let's say player only guessed a few letters
     partial = {"X": "H", "T": "E"}  # Example: if X was H and T was E
