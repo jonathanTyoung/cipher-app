@@ -78,31 +78,86 @@ def analyze_frequency(text):
     return freq.most_common()
 
 
-# Test it
-if __name__ == "__main__":
-    # Generate key and encrypt
+def generate_puzzle(difficulty="easy"):
+    """Generate an encrypted puzzle with solution"""
+    import random
+
+    # Library of messages by difficulty
+    messages = {
+        "easy": [
+            "HELLO WORLD",
+            "MEET ME AT NOON",
+            "THE QUICK BROWN FOX",
+            "SECRET MESSAGE",
+            "CODE BREAKER",
+        ],
+        "medium": [
+            "TO BE OR NOT TO BE THAT IS THE QUESTION",
+            "THE ONLY THING WE HAVE TO FEAR IS FEAR ITSELF",
+        ],
+        "hard": ["IN THE BEGINNING WAS THE WORD AND THE WORD WAS WITH GOD"],
+    }
+
+    # Pick a random message for this difficulty
+    message = random.choice(messages[difficulty])
+
+    # Generate key and encrypt it
     key = generate_cipher_key()
-    message = "HELLO WORLD"
     encrypted = encrypt_message(message, key)
 
-    print(f"Original:  {message}")
-    print(f"Encrypted: {encrypted}")
-    print(f"Key: {key}")
+    # Return everything we need
+    return {
+        "encrypted": encrypted,
+        "solution": message,
+        "key": key,
+        "difficulty": difficulty,
+    }
+
+
+if __name__ == "__main__":
+    print("=" * 50)
+    print("TESTING PUZZLE GENERATOR")
+    print("=" * 50)
+
+    # Generate an easy puzzle
+    puzzle = generate_puzzle("easy")
+
+    print(f"\nDifficulty: {puzzle['difficulty']}")
+    print(f"Encrypted:  {puzzle['encrypted']}")
+    print(f"Solution:   {puzzle['solution']}")
     print()
 
-    # Full decryption (with complete key)
-    decrypted = decrypt_message(encrypted, key)
-    print(f"Decrypted: {decrypted}")
-    print()
-
-    # NEW: Test frequency analysis
+    # Show frequency analysis of the puzzle
     print("Frequency Analysis:")
-    frequencies = analyze_frequency(encrypted)
-    for letter, count in frequencies:
+    frequencies = analyze_frequency(puzzle["encrypted"])
+    for letter, count in frequencies[:5]:  # Top 5 only
         print(f"  {letter}: {count} times")
-        
-    # Partial decryption (simulating player guesses)
-    # Let's say player only guessed a few letters
-    partial = {"X": "H", "T": "E"}  # Example: if X was H and T was E
-    progress = decrypt_with_partial_key(encrypted, partial)
-    print(f"Partial decrypt (player's progress): {progress}")
+
+# # Test it
+# if __name__ == "__main__":
+#     # Generate key and encrypt
+#     key = generate_cipher_key()
+#     message = "HELLO WORLD"
+#     encrypted = encrypt_message(message, key)
+
+#     print(f"Original:  {message}")
+#     print(f"Encrypted: {encrypted}")
+#     print(f"Key: {key}")
+#     print()
+
+#     # Full decryption (with complete key)
+#     decrypted = decrypt_message(encrypted, key)
+#     print(f"Decrypted: {decrypted}")
+#     print()
+
+#     # NEW: Test frequency analysis
+#     print("Frequency Analysis:")
+#     frequencies = analyze_frequency(encrypted)
+#     for letter, count in frequencies:
+#         print(f"  {letter}: {count} times")
+
+#     # Partial decryption (simulating player guesses)
+#     # Let's say player only guessed a few letters
+#     partial = {"X": "H", "T": "E"}  # Example: if X was H and T was E
+#     progress = decrypt_with_partial_key(encrypted, partial)
+#     print(f"Partial decrypt (player's progress): {progress}")
